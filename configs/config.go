@@ -1,8 +1,10 @@
 package configs
 
 import (
+	"fmt"
 	"time"
 
+	"github.com/caarlos0/env/v10"
 	"github.com/joho/godotenv"
 )
 
@@ -53,4 +55,26 @@ func PopulateENV() error {
 
 type Logging struct {
 	IsDBLogFormatted bool `yaml:"isDBLogFormatted"`
+}
+
+var (
+	conf *Config
+)
+
+// Get config
+// Return *Config
+func GetConfig() *Config {
+	// Populate ENV
+	err := PopulateENV()
+	if err != nil {
+		fmt.Errorf("Parsing configuration err: %w", err)
+	}
+
+	// Config
+	cfg := Config{}
+	if err := env.Parse(&cfg); err != nil {
+		fmt.Errorf("Parsing configuration err: %w", err)
+	}
+
+	return &cfg
 }
