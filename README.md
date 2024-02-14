@@ -15,7 +15,8 @@ Connecting people who give things that they don't need and people who need them.
 ## Running the service locally
 
 - go mod tidy
-- set env in local.env
+- create a mySQL schema, name it sharecycle-local ( for local )
+- set env in local.env (db's information, port)
 - go run cmd/app/main.go
 
 ## Database Migration
