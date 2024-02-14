@@ -3,21 +3,21 @@
 ## Summary of service
 
 This is the backend of sharecycle application.
-Allow you to post items that you don't need and the one that need will find
+Connecting people who give things that they don't need and people who need them.
 
 ### Versions:
 
 - `go`: 1.20
-- `mySQL`:
+- `mySQL`: 8.0.35
 
 ## API Documentation Reference
 
 ## Running the service locally
 
-- navigate to the backend folder
 - go mod tidy
-- set env in local.env
-- go run cmd/main.go
+- create a mySQL schema, name it sharecycle-local ( for local )
+- set env in local.env (db's information, port)
+- go run cmd/app/main.go
 
 ## Database Migration
 
