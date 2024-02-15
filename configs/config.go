@@ -1,7 +1,7 @@
 package configs
 
 import (
-	"fmt"
+	"log"
 	"time"
 
 	"github.com/caarlos0/env/v10"
@@ -20,7 +20,7 @@ type Config struct {
 		Password string `env:"DB_PASSWORD"`
 		Host     string `env:"DB_HOST"`
 		Port     int    `env:"DB_PORT" envDefault:"3306"`
-		DBName   string `env:"DB_NAME" envDefault:"sharecycle"`
+		DBName   string `env:"DB_NAME"`
 		Params   string `env:"DB_PARAMS_OVERRIDES" envDefault:"sslmode=disable"`
 	}
 	// DBConfigs *DBConfigs `yaml:"dbConfigs"`
@@ -46,7 +46,7 @@ type DBNames struct {
 }
 
 func PopulateENV() error {
-	err := godotenv.Load("local.env")
+	err := godotenv.Load(".env")
 	if err != nil {
 		return err
 	}
@@ -57,23 +57,18 @@ type Logging struct {
 	IsDBLogFormatted bool `yaml:"isDBLogFormatted"`
 }
 
-var (
-	conf *Config
-)
-
 // Get config
-// Return *Config
 func GetConfig() *Config {
 	// Populate ENV
 	err := PopulateENV()
 	if err != nil {
-		fmt.Errorf("Parsing configuration err: %w", err)
+		log.Fatal("Error loading .env file")
 	}
 
 	// Config
 	cfg := Config{}
 	if err := env.Parse(&cfg); err != nil {
-		fmt.Errorf("Parsing configuration err: %w", err)
+		log.Fatal("Parsing configuration err: %w", err)
 	}
 
 	return &cfg

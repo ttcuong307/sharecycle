@@ -1,14 +1,10 @@
 package main
 
-import (
-	"sharecycle/configs"
-	"sharecycle/internal/app"
-)
+import "sharecycle/internal/app"
 
 func main() {
-	// Config
-	cfg := configs.GetConfig()
 
 	// Run
-	app.Run(cfg)
+	s := app.Ready()
+	s.Run()
 }
