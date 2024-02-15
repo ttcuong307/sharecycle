@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"github.com/sirupsen/logrus"
 	"sharecycle/configs"
 
 	"go.uber.org/zap"
@@ -26,7 +27,7 @@ type cLogger struct {
 	sugarLogger *zap.SugaredLogger
 }
 
-func NewArLogger(cfg *configs.Config) (*cLogger, error) {
+func NewArLogger(cfg *configs.Config) *cLogger {
 
 	z, err := zap.Config{
 		Level:            zap.NewAtomicLevelAt(zap.DebugLevel),
@@ -39,7 +40,7 @@ func NewArLogger(cfg *configs.Config) (*cLogger, error) {
 	}.Build(zap.AddCaller(), zap.AddCallerSkip(1))
 
 	if err != nil {
-		return nil, err
+		logrus.Fatalln(err)
 	}
 	z = z.With(
 		zap.String("service", cfg.ServiceName),
@@ -49,7 +50,7 @@ func NewArLogger(cfg *configs.Config) (*cLogger, error) {
 	zs := z.Sugar()
 	zs.Infof("Init sugar zap foundation")
 
-	return &cLogger{sugarLogger: zs}, nil
+	return &cLogger{sugarLogger: zs}
 }
 
 func (l *cLogger) Debug(args ...interface{}) {

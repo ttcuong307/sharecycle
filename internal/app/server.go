@@ -2,13 +2,12 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"os"
 	"os/signal"
 	"sharecycle/configs"
 	"sharecycle/foundation/database"
-	"sharecycle/foundation/web"
+	v1 "sharecycle/internal/controller/http/v1"
 	"sharecycle/migrations"
 	"sharecycle/pkg/logger"
 	"syscall"
@@ -17,12 +16,16 @@ import (
 type Server struct {
 	conf *configs.Config
 	db   *database.DBV1
+	l    logger.Logger
+	h    *v1.Handler
 }
 
-func NewServer(conf *configs.Config, dbV1 *database.DBV1) *Server {
+func NewServer(conf *configs.Config, dbV1 *database.DBV1, l logger.Logger, h *v1.Handler) *Server {
 	return &Server{
 		conf: conf,
 		db:   dbV1,
+		l:    l,
+		h:    h,
 	}
 }
 
@@ -31,29 +34,23 @@ func (r *Server) Run() {
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
-	// Logger
-	l, err := logger.NewArLogger(r.conf)
-	if err != nil {
-		fmt.Errorf("Server.Shutdown - Init sugar zap: %w", err)
-	}
-	l.Info("Init logger complete.")
-
 	// Migrates
-	if err = migrations.Migrate(ctx, migrations.Config{
+	if err := migrations.Migrate(ctx, migrations.Config{
 		User:           r.conf.Database.UserName,
 		Password:       r.conf.Database.Password,
 		Name:           r.conf.Database.DBName,
-		LoggerOverride: migrations.WrapLogger(l),
+		LoggerOverride: migrations.WrapLogger(r.l),
 		DryRun:         false,
 	}); err != nil {
-		l.Info("migration errord")
+		r.l.Info("migration errord")
 	}
 
 	// Init server
-	sv := Init(web.Deps{
+	sv := Init(Deps{
 		DB:      r.db.DB,
-		Logger:  l,
+		Logger:  r.l,
 		APIAddr: r.conf.API.Address,
+		Handler: r.h,
 	})
 
 	srv := &http.Server{
@@ -66,9 +63,9 @@ func (r *Server) Run() {
 
 	// Start server
 	go func() {
-		l.Infof("Starting server on: %s", r.conf.API.Address)
+		r.l.Infof("Starting server on: %s", r.conf.API.Address)
 		if err := srv.ListenAndServe(); err != nil {
-			l.Info("server stopped")
+			r.l.Info("server stopped")
 		}
 	}()
 
@@ -82,5 +79,5 @@ func (r *Server) Run() {
 		os.Exit(1)
 	}
 
-	l.Info("Server stopped gracefully")
+	r.l.Info("Server stopped gracefully")
 }
