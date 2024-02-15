@@ -46,7 +46,7 @@ type DBNames struct {
 }
 
 func PopulateENV() error {
-	err := godotenv.Load(".env")
+	err := godotenv.Load("D:/Cuong-Private/sharecycle/.env")
 	if err != nil {
 		return err
 	}
