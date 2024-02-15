@@ -23,11 +23,11 @@ func NewDB(config *configs.Config) *DBV1 {
 	}
 
 	dsn := fmt.Sprintf(configs.DnsFormat,
-		config.Database.UserName,
-		config.Database.Password,
-		config.Database.Host,
-		config.Database.Port,
-		config.Database.DBName,
+		config.DBConfigs.UserName,
+		config.DBConfigs.Password,
+		config.DBConfigs.Host,
+		config.DBConfigs.Port,
+		config.DBNames.V1,
 		options.Encode())
 
 	var (
