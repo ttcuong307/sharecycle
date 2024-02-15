@@ -36,9 +36,9 @@ func (r *Server) Run() {
 
 	// Migrates
 	if err := migrations.Migrate(ctx, migrations.Config{
-		User:           r.conf.Database.UserName,
-		Password:       r.conf.Database.Password,
-		Name:           r.conf.Database.DBName,
+		User:           r.conf.DBConfigs.UserName,
+		Password:       r.conf.DBConfigs.Password,
+		Name:           r.conf.DBNames.V1,
 		LoggerOverride: migrations.WrapLogger(r.l),
 		DryRun:         false,
 	}); err != nil {
@@ -49,12 +49,12 @@ func (r *Server) Run() {
 	sv := Init(Deps{
 		DB:      r.db.DB,
 		Logger:  r.l,
-		APIAddr: r.conf.API.Address,
+		APIAddr: r.conf.APIs.Address,
 		Handler: r.h,
 	})
 
 	srv := &http.Server{
-		Addr:    r.conf.API.Address,
+		Addr:    r.conf.APIs.Address,
 		Handler: sv,
 	}
 
@@ -63,7 +63,7 @@ func (r *Server) Run() {
 
 	// Start server
 	go func() {
-		r.l.Infof("Starting server on: %s", r.conf.API.Address)
+		r.l.Infof("Starting server on: %s", r.conf.APIs.Address)
 		if err := srv.ListenAndServe(); err != nil {
 			r.l.Info("server stopped")
 		}
@@ -71,7 +71,7 @@ func (r *Server) Run() {
 
 	// Graceful shutdown
 	<-stop
-	ctxShutdown, cancel := context.WithTimeout(context.Background(), r.conf.API.ShutdownTimeout)
+	ctxShutdown, cancel := context.WithTimeout(context.Background(), r.conf.APIs.ShutdownTimeout)
 	defer cancel()
 
 	// Shutdown server
