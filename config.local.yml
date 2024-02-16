@@ -1,0 +1,16 @@
+serviceName: Sharecycle
+secret: false
+allowOrigins: ["http://localhost:3000"]
+env: local
+apis:
+  address: localhost:8081
+  shutdownTimeout: 60s
+dbConfigs:
+  username: root
+  password: password
+  host: localhost
+  port: 3306
+dbPassword: password
+dbNames:
+  v1: sharecycle-local
+enableMigration: true
