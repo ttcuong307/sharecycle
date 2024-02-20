@@ -1,11 +1,12 @@
 package app
 
 import (
-	"gorm.io/gorm"
 	"net/http"
 	"sharecycle/foundation/web"
 	v1 "sharecycle/internal/controller/http/v1"
 	"sharecycle/pkg/logger"
+
+	"gorm.io/gorm"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"

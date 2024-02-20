@@ -13,6 +13,7 @@ type Config struct {
 	ServiceName string    `yaml:"serviceName"`
 	Env         string    `yaml:"env"`
 	APIs        Apis      `yaml:"apis"`
+	GrpcAPIs    GrpcApis  `yaml:"grpcApis"`
 	DBConfigs   DBConfigs `yaml:"dbConfigs"`
 	DBNames     DBNames   `yaml:"dbNames"`
 	DBPassword  string    `yaml:"dbPassword"`
@@ -31,6 +32,11 @@ type DBNames struct {
 }
 
 type Apis struct {
+	Address         string        `yaml:"address"`
+	ShutdownTimeout time.Duration `yaml:"shutdownTimeout"`
+}
+
+type GrpcApis struct {
 	Address         string        `yaml:"address"`
 	ShutdownTimeout time.Duration `yaml:"shutdownTimeout"`
 }

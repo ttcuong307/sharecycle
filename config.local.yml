@@ -3,7 +3,10 @@ secret: false
 allowOrigins: ["http://localhost:3000"]
 env: local
 apis:
-  address: localhost:8081
+  address: 0.0.0.0:8081
+  shutdownTimeout: 60s
+grpcApis:
+  address: 0.0.0.0:9090
   shutdownTimeout: 60s
 dbConfigs:
   username: root
