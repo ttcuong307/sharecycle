@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package pb;
+
+import "google/api/annotations.proto";
+import "rpc_create_user.proto";
+import "rpc_get_user.proto";
+
+option go_package = "sharecycle/internal/pb";
+
+service Sharecycle {
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {
+      get: "/api/v1/users/{userId}"
+    };
+  }
+}

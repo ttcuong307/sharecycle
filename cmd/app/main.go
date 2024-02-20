@@ -1,9 +1,10 @@
 package main
 
-import "sharecycle/internal/app"
+import "sharecycle/internal/gapi"
 
 func main() {
-	// Run
-	s := app.Ready()
-	s.Run()
+	// Run GRPC and Gateway server
+	s := gapi.GrpcReady()
+	go s.RunGatewayServer()
+	s.RunGrpcServer()
 }

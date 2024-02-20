@@ -1,0 +1,17 @@
+syntax = "proto3";
+import "user.proto";
+
+package pb;
+
+option go_package = "sharecycle/internal/pb";
+
+message CreateUserRequest {
+  string name = 1;
+  string email = 2;
+  string password = 3;
+  string gender = 4;
+}
+
+message CreateUserResponse {
+  User user = 1;
+}

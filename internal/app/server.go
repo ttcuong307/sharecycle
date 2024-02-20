@@ -42,7 +42,7 @@ func (r *Server) Run() {
 		LoggerOverride: migrations.WrapLogger(r.l),
 		DryRun:         false,
 	}); err != nil {
-		r.l.Info("migration errord")
+		r.l.Fatal("migration errord")
 	}
 
 	// Init server
@@ -65,7 +65,7 @@ func (r *Server) Run() {
 	go func() {
 		r.l.Infof("Starting server on: %s", r.conf.APIs.Address)
 		if err := srv.ListenAndServe(); err != nil {
-			r.l.Info("server stopped")
+			r.l.Fatal("server stopped")
 		}
 	}()
 
